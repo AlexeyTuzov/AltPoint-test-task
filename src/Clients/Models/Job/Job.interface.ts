@@ -4,7 +4,5 @@ export default interface JobCreationAttr {
     dateDismissal: string;
     monIncome: number;
     tin: string;
-    factAddressID: string;
-    jurAddressID: string;
     phoneNumber: string;
 }

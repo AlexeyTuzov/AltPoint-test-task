@@ -8,14 +8,7 @@ import Job from './Clients/Models/Job/Job.model';
 import Passport from './Clients/Models/Passport/Passport.model';
 import ChildrenParents from './Clients/Models/Child/Children-Parents.model';
 import { ClientsModule } from './Clients/Modules/clients/clients.module';
-import { ClientsService } from './Clients/Modules/clients/clients.service';
 import { ConfigModule } from '@nestjs/config';
-import { JobsModule } from './Clients/Modules/jobs/jobs.module';
-import { AddressModule } from './clients/modules/address/address.module';
-import { ChildService } from './clients/modules/child/child.service';
-import { ChildModule } from './clients/modules/child/child.module';
-import { CommunicationModule } from './clients/modules/communication/communication.module';
-import { PassportModule } from './clients/modules/passport/passport.module';
 
 @Module({
     imports: [
@@ -32,12 +25,7 @@ import { PassportModule } from './clients/modules/passport/passport.module';
             models: [Address, Child, ChildrenParents, Client, Communication, Job, Passport],
             autoLoadModels: true
         }),
-        ClientsModule,
-        JobsModule,
-        AddressModule,
-        ChildModule,
-        CommunicationModule,
-        PassportModule
+        ClientsModule
     ]
 })
 export class AppModule {

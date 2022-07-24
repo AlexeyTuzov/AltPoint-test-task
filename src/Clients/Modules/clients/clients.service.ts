@@ -36,18 +36,18 @@ export class ClientsService {
         if (dto.regAddress) {
             await this.addressService.createAddress({ ...dto.regAddress, clientID: newClient.id });
         }
-        if (dto.jobs.length > 0) {
+        if (dto.jobs && dto.jobs.length > 0) {
             for (let job of dto.jobs) {
                 await this.jobsService.createJob({ ...job, clientID: newClient.id });
             }
         }
-        if (dto.children.length > 0) {
+        if (dto.children && dto.children.length > 0) {
             for (let child of dto.children) {
                 let newChild = await this.childService.createChild({ ...child });
                 await newChild.$add('parents', newClient.id);
             }
         }
-        if (dto.communications.length > 0) {
+        if (dto.communications && dto.communications.length > 0) {
             for (let comm of dto.communications) {
                 await this.communicationService.createCommunication({ ...comm, clientID: newClient.id});
             }

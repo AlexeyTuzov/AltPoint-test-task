@@ -8,7 +8,7 @@ export default class Communication extends Model<Communication, CommunicationCre
 
     @Column({ type: DataType.STRING, primaryKey: true, unique: true, defaultValue: uuid.v4() })
     id: string;
-    @Column({ type: DataType.ENUM('email', 'password'), allowNull: false })
+    @Column({ type: DataType.ENUM('email', 'phone'), allowNull: false })
     type: string;
     @Column({ type: DataType.STRING, allowNull: false })
     value: string;

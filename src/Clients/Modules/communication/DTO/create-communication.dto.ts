@@ -1,6 +1,6 @@
 enum Types {
     'email' = 'email',
-    'password' = 'password'
+    'phone' = 'phone'
 }
 
 export default class CreateCommunicationDto {

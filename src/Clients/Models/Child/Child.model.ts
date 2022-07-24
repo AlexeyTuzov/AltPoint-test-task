@@ -1,4 +1,4 @@
-import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
 import ChildCreationAttr from './Child.interface';
 import Client from '../Client/Client.model';
 import ChildrenParents from './Children-Parents.model';
