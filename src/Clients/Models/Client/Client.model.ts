@@ -8,7 +8,7 @@ import Job from '../Job/Job.model';
 import Communication from '../Communication/Communication.model';
 import * as uuid from 'uuid';
 
-@Table({ tableName: 'clients' })
+@Table({ tableName: 'Clients' })
 export default class Client extends Model<Client, ClientCreationAttr> {
 
     @Column({ type: DataType.STRING, primaryKey: true, unique: true, defaultValue: uuid.v4() })
@@ -19,7 +19,7 @@ export default class Client extends Model<Client, ClientCreationAttr> {
     surname: string;
     @Column({ type: DataType.STRING, allowNull: true })
     patronymic: string;
-    @Column({ type: DataType.DATE, allowNull: true })
+    @Column({ type: DataType.DATEONLY, allowNull: true })
     dob: string;
     @Column({ type: DataType.ARRAY(DataType.STRING), allowNull: false })
     documentIds: string[];
@@ -35,7 +35,8 @@ export default class Client extends Model<Client, ClientCreationAttr> {
     monIncome: number;
     @Column({ type: DataType.FLOAT, allowNull: true })
     monExpenses: number;
-
+    @Column({ type: DataType.DATE, allowNull: true, defaultValue: null })
+    deletedAt: string;
 
     @BelongsToMany(() => Child, () => ChildrenParents)
     children: Child[];

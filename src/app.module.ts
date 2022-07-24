@@ -15,15 +15,9 @@ import { AddressModule } from './clients/modules/address/address.module';
 import { ChildService } from './clients/modules/child/child.service';
 import { ChildModule } from './clients/modules/child/child.module';
 import { CommunicationModule } from './clients/modules/communication/communication.module';
-import { PassportService } from './clients/modules/passport/passport.service';
 import { PassportModule } from './clients/modules/passport/passport.module';
 
 @Module({
-    providers: [
-        ClientsService,
-        ChildService,
-        PassportService
-    ],
     imports: [
         ConfigModule.forRoot( {
             envFilePath: '.env'
@@ -44,9 +38,6 @@ import { PassportModule } from './clients/modules/passport/passport.module';
         ChildModule,
         CommunicationModule,
         PassportModule
-    ],
-    exports: [
-        ClientsService
     ]
 })
 export class AppModule {

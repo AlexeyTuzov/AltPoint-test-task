@@ -14,7 +14,7 @@ export default class Passport extends Model<Passport, PassportCreationAttr> {
     number: string;
     @Column({ type: DataType.STRING, allowNull: false })
     giver: string;
-    @Column({ type: DataType.DATE, allowNull: false })
+    @Column({ type: DataType.DATEONLY, allowNull: false })
     dateIssued: string;
 
     @BelongsTo(() => Client)

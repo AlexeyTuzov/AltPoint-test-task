@@ -1,4 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import Job from '../../Models/Job/Job.model';
+import { AddressService } from '../address/address.service';
+import CreateJobDto from './DTO/create-job.dto';
 
 @Injectable()
-export class JobsService {}
+export class JobsService {
+
+    constructor(@InjectModel(Job) private jobsRepository: typeof Job,
+                private addressService: AddressService) {
+    }
+
+    async createJob(dto: CreateJobDto) {
+        const newJob = await this.jobsRepository.create(dto);
+        if (dto.factAddress) {
+            await this.addressService.createAddress({ ...dto.factAddress, jobID: newJob.id});
+        }
+        if (dto.jurAddress) {
+            await this.addressService.createAddress({ ...dto.jurAddress, jobID: newJob.id});
+        }
+        return newJob;
+    }
+}

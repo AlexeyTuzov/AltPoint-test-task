@@ -3,9 +3,7 @@ interface Client {
     surname: string;
     patronymic: string;
     dob: string;
-    passport: string;
-    livingAddress: string;
-    regAddress: string;
+    documentIds: string[];
     curWorkExp: number;
     typeEducation: string;
     monIncome: number;

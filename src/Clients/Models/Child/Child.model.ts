@@ -14,7 +14,7 @@ export default class Child extends Model<Child, ChildCreationAttr> {
     surname: string;
     @Column({ type: DataType.STRING, allowNull: true })
     patronymic: string;
-    @Column({ type: DataType.DATE, allowNull: true })
+    @Column({ type: DataType.DATEONLY, allowNull: true })
     dob: string;
 
     @BelongsToMany(() => Client, () => ChildrenParents)

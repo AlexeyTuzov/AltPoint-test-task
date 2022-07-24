@@ -1,0 +1,6 @@
+export default class CreateChildDto {
+    readonly name: string;
+    readonly surname: string;
+    readonly patronymic: string;
+    readonly dob: string;
+}

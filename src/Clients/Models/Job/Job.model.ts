@@ -1,31 +1,24 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table } from 'sequelize-typescript';
 import JobCreationAttr from './Job.interface';
-import AddressModel from '../Address/Address.model';
 import Client from '../Client/Client.model';
 import * as uuid from 'uuid';
+import Address from '../Address/Address.model';
 
-@Table({ tableName: 'jobs' })
+@Table({ tableName: 'Jobs' })
 export default class Job extends Model<Job, JobCreationAttr> {
 
     @Column({ type: DataType.STRING, primaryKey: true, defaultValue: uuid.v4() })
-    //@Column({ type: DataType.INTEGER, primaryKey: true, unique: true, autoIncrement: true })
     id: string;
     @Column({ type: DataType.ENUM('main', 'part-time'), allowNull: true })
     type: string;
-    @Column({ type: DataType.DATE, allowNull: true })
+    @Column({ type: DataType.DATEONLY, allowNull: true })
     dateEmp: string;
-    @Column({ type: DataType.DATE, allowNull: true })
+    @Column({ type: DataType.DATEONLY, allowNull: true })
     dateDismissal: string;
     @Column({ type: DataType.FLOAT, allowNull: true })
     monIncome: number;
     @Column({ type: DataType.STRING, allowNull: true })
     tin: string;
-    @ForeignKey(() => AddressModel)
-    @Column({ type: DataType.STRING, allowNull: true })
-    factAddressID: string;
-    @ForeignKey(() => AddressModel)
-    @Column({ type: DataType.STRING, allowNull: true })
-    jurAddressID: string;
     @Column({ type: DataType.STRING, allowNull: true })
     phoneNumber: string;
 
@@ -34,4 +27,9 @@ export default class Job extends Model<Job, JobCreationAttr> {
     @ForeignKey(() => Client)
     @Column({ type: DataType.STRING, allowNull: false })
     clientID: string;
+
+    @HasOne(() => Address)
+    factAddress: Address;
+    @HasOne(() => Address)
+    jurAddress: Address;
 }
