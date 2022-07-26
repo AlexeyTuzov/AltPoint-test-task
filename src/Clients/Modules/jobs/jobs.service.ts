@@ -3,6 +3,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import Job from '../../Models/Job/Job.model';
 import { AddressService } from '../address/address.service';
 import CreateJobDto from './DTO/create-job.dto';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class JobsService {
@@ -12,7 +13,8 @@ export class JobsService {
     }
 
     async createJob(dto: CreateJobDto) {
-        const newJob = await this.jobsRepository.create(dto);
+        const generatedID = uuid.v4();
+        const newJob = await this.jobsRepository.create({ ...dto, id: generatedID});
         if (dto.factAddress) {
             await this.addressService.createAddress({ ...dto.factAddress, jobID: newJob.id});
         }

@@ -7,6 +7,7 @@ import Address from '../Address/Address.model';
 import Job from '../Job/Job.model';
 import Communication from '../Communication/Communication.model';
 import * as uuid from 'uuid';
+import AddressesClients from '../Address/Addresses-Clients.model';
 
 @Table({ tableName: 'Clients' })
 export default class Client extends Model<Client, ClientCreationAttr> {
@@ -42,9 +43,9 @@ export default class Client extends Model<Client, ClientCreationAttr> {
     children: Child[];
     @HasOne(() => Passport)
     passport: Passport;
-    @HasOne(() => Address)
+    @BelongsToMany(() => Address, () => AddressesClients)
     livingAddress: Address;
-    @HasOne(() => Address)
+    @BelongsToMany(() => Address, () => AddressesClients)
     regAddress: Address;
     @HasMany(() => Job)
     jobs: Job[];

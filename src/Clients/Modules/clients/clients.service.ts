@@ -8,6 +8,7 @@ import { AddressService } from '../address/address.service';
 import { JobsService } from '../jobs/jobs.service';
 import { ChildService } from '../child/child.service';
 import { CommunicationService } from '../communication/communication.service';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class ClientsService {
@@ -21,11 +22,12 @@ export class ClientsService {
     }
 
     async getAllClients() {
-        return await this.clientRepository.findAll({ where: { deletedAt: null } });
+        return await this.clientRepository.findAll({ where: { deletedAt: null }, include: { all: true } });
     }
 
     async createClient(dto: CreateClientDto) {
-        const newClient = await this.clientRepository.create(dto);
+        const generatedID = uuid.v4();
+        const newClient = await this.clientRepository.create({ ...dto, id: generatedID });
 
         if (dto.passport) {
             await this.passportService.createPassport({ ...dto.passport, clientID: newClient.id });
@@ -45,11 +47,12 @@ export class ClientsService {
             for (let child of dto.children) {
                 let newChild = await this.childService.createChild({ ...child });
                 await newChild.$add('parents', newClient.id);
+                await newClient.$add('children', newChild.id);
             }
         }
         if (dto.communications && dto.communications.length > 0) {
             for (let comm of dto.communications) {
-                await this.communicationService.createCommunication({ ...comm, clientID: newClient.id});
+                await this.communicationService.createCommunication({ ...comm, clientID: newClient.id });
             }
         }
 

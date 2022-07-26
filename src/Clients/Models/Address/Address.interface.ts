@@ -1,4 +1,5 @@
 export default interface AddressCreationAttr {
+    id: string;
     zipCode: string;
     country: string;
     region: string;

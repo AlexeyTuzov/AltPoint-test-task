@@ -11,7 +11,7 @@ export class ClientsController {
 
     @Get()
     getAllClients() {
-        return this.clientsService.getAllClients()
+        return this.clientsService.getAllClients();
     }
 
     @Post()

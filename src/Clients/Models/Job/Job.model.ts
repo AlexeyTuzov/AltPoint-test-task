@@ -1,8 +1,19 @@
-import { BelongsTo, Column, DataType, ForeignKey, HasOne, Model, Table } from 'sequelize-typescript';
+import {
+    BelongsTo,
+    BelongsToMany,
+    Column,
+    DataType,
+    ForeignKey,
+    HasMany,
+    HasOne,
+    Model,
+    Table
+} from 'sequelize-typescript';
 import JobCreationAttr from './Job.interface';
 import Client from '../Client/Client.model';
 import * as uuid from 'uuid';
 import Address from '../Address/Address.model';
+import AddressesJobs from '../Address/Addresses-Jobs.model';
 
 @Table({ tableName: 'Jobs' })
 export default class Job extends Model<Job, JobCreationAttr> {
@@ -28,8 +39,8 @@ export default class Job extends Model<Job, JobCreationAttr> {
     @Column({ type: DataType.STRING, allowNull: false })
     clientID: string;
 
-    @HasOne(() => Address)
+    @BelongsToMany(() => Address, () => AddressesJobs)
     factAddress: Address;
-    @HasOne(() => Address)
+    @BelongsToMany(() => Address, () => AddressesJobs)
     jurAddress: Address;
 }

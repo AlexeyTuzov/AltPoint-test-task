@@ -14,12 +14,26 @@ import { AddressModule } from '../address/address.module';
 import { JobsModule } from '../jobs/jobs.module';
 import { ChildModule } from '../child/child.module';
 import { CommunicationModule } from '../communication/communication.module';
+import AddressesClients from '../../Models/Address/Addresses-Clients.model';
+import AddressesJobs from '../../Models/Address/Addresses-Jobs.model';
+import { AddressService } from '../address/address.service';
+import { ChildService } from '../child/child.service';
 
 @Module({
     providers: [ClientsService],
     controllers: [ClientsController],
     imports: [
-        SequelizeModule.forFeature([Client, Address, Child, ChildrenParents, Communication, Job, Passport]),
+        SequelizeModule.forFeature([
+            Client,
+            Address,
+            Child,
+            ChildrenParents,
+            Communication,
+            Job,
+            Passport,
+            AddressesClients,
+            AddressesJobs
+        ]),
         PassportModule,
         AddressModule,
         JobsModule,

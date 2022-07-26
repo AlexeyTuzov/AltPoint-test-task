@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import Child from '../../Models/Child/Child.model';
 import CreateChildDto from './DTO/create-child.dto';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class ChildService {
@@ -10,7 +11,12 @@ export class ChildService {
     }
 
     async createChild(dto: CreateChildDto) {
-        return await this.childRepository.create(dto);
+        const generatedID = uuid.v4();
+        return await this.childRepository.create( { ...dto, id: generatedID});
+    }
+
+    async getAll() {
+        return await this.childRepository.findAll({include: {all: true}})
     }
 
 }

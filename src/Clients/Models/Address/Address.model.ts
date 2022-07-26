@@ -1,8 +1,10 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, Model, Table } from 'sequelize-typescript';
 import AddressCreationAttr from './Address.interface';
 import Job from '../Job/Job.model';
 import Client from '../Client/Client.model';
 import * as uuid from 'uuid';
+import AddressesClients from './Addresses-Clients.model';
+import AddressesJobs from './Addresses-Jobs.model';
 
 @Table({ tableName: 'Addresses' })
 export default class Address extends Model<Address, AddressCreationAttr> {
@@ -24,15 +26,8 @@ export default class Address extends Model<Address, AddressCreationAttr> {
     @Column({ type: DataType.STRING, allowNull: true })
     apartment: string;
 
-    @BelongsTo(() => Job)
+    @BelongsToMany(() => Job, () => AddressesJobs)
     job: Job;
-    @ForeignKey(() => Job)
-    @Column({ type: DataType.STRING, allowNull: true })
-    jobID: string;
-
-    @BelongsTo(() => Client)
+    @BelongsToMany(() => Client, () => AddressesClients)
     client: Client;
-    @ForeignKey(() => Client)
-    @Column({ type: DataType.STRING, allowNull: true })
-    clientID: string;
 }

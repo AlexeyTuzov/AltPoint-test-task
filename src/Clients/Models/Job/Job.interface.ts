@@ -1,4 +1,5 @@
 export default interface JobCreationAttr {
+    id: string;
     type: string;
     dateEmp: string;
     dateDismissal: string;

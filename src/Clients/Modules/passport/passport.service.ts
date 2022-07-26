@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import Passport from '../../Models/Passport/Passport.model';
 import CreatePassportDto from './DTO/create-passport.dto';
+import * as uuid from 'uuid';
 
 @Injectable()
 export class PassportService {
@@ -10,6 +11,7 @@ export class PassportService {
     }
 
     async createPassport(dto: CreatePassportDto) {
-        return await this.passportRepository.create(dto);
+        const generatedID = uuid.v4();
+        return await this.passportRepository.create({ ...dto, id: generatedID });
     }
 }
