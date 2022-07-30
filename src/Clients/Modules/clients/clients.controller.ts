@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import CreateClientDto, { CreateClientWithSpouseDto } from './DTO/create-client.dto';
 import UpdateClientDto from './DTO/update-client.dto';
@@ -16,20 +16,23 @@ export class ClientsController {
 
     @Post()
     async createClient(@Body() dto: CreateClientWithSpouseDto) {
-        if (dto.spouse) {
-            let spouseID: string = await this.clientsService.createClient(dto.spouse);
-            return this.clientsService.createClient({...dto, spouseID});
-        }
-        return this.clientsService.createClient(dto);
+
+            if (dto.spouse) {
+                let spouseID: string = await this.clientsService.createClient(dto.spouse);
+                return this.clientsService.createClient({ ...dto, spouseID });
+            }
+            return this.clientsService.createClient(dto);
     }
 
     @Get('/:id')
-    getClientWithSpouse(@Param() id: string) {
+    getClientWithSpouse(@Param('id') id: string) {
         return this.clientsService.getClientWithSpouse(id);
+
+
     }
 
     @Patch('/:id')
-    updateClient(@Param() id: string, @Body() dto: UpdateClientDto) {
+    updateClient(@Param('id') id: string, @Body() dto: UpdateClientDto) {
         return this.clientsService.updateClient(id, dto);
     }
 

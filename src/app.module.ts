@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { SequelizeModule } from '@nestjs/sequelize';
-import Address from './Clients/Models/Address/Address.model';
 import Child from './Clients/Models/Child/Child.model';
 import Client from './Clients/Models/Client/Client.model';
 import Communication from './Clients/Models/Communication/Communication.model';
@@ -9,8 +8,10 @@ import Passport from './Clients/Models/Passport/Passport.model';
 import ChildrenParents from './Clients/Models/Child/Children-Parents.model';
 import { ClientsModule } from './Clients/Modules/clients/clients.module';
 import { ConfigModule } from '@nestjs/config';
-import AddressesJobs from './Clients/Models/Address/Addresses-Jobs.model';
-import AddressesClients from './Clients/Models/Address/Addresses-Clients.model';
+import LivingAddress from './Clients/Models/Address/Living-Address.model';
+import RegAddress from './Clients/Models/Address/Reg-Address.model';
+import FactAddress from './Clients/Models/Address/Fact-Address.model';
+import JurAddress from './Clients/Models/Address/Jur-Address.model';
 
 @Module({
     imports: [
@@ -25,15 +26,16 @@ import AddressesClients from './Clients/Models/Address/Addresses-Clients.model';
             password: process.env.POSTGRES_PASSWORD,
             database: process.env.POSTGRES_DB,
             models: [
-                Address,
                 Child,
                 ChildrenParents,
                 Client,
                 Communication,
                 Job,
                 Passport,
-                AddressesJobs,
-                AddressesClients
+                LivingAddress,
+                RegAddress,
+                FactAddress,
+                JurAddress
             ],
             autoLoadModels: true
         }),

@@ -4,13 +4,15 @@ import { SequelizeModule } from '@nestjs/sequelize';
 import Job from '../../Models/Job/Job.model';
 import { AddressService } from '../address/address.service';
 import { AddressModule } from '../address/address.module';
-import Address from '../../Models/Address/Address.model';
-import AddressesJobs from '../../Models/Address/Addresses-Jobs.model';
+import FactAddress from '../../Models/Address/Fact-Address.model';
+import JurAddress from '../../Models/Address/Jur-Address.model';
+import LivingAddress from '../../Models/Address/Living-Address.model';
+import RegAddress from '../../Models/Address/Reg-Address.model';
 
 @Module({
     providers: [JobsService, AddressService],
     imports: [
-        SequelizeModule.forFeature([Job, Address, AddressesJobs]),
+        SequelizeModule.forFeature([Job, FactAddress, JurAddress, LivingAddress, RegAddress]),
         AddressModule
     ],
     exports: [JobsService]

@@ -2,7 +2,6 @@ import { Module } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ClientsController } from './clients.controller';
-import Address from '../../Models/Address/Address.model';
 import Child from '../../Models/Child/Child.model';
 import Client from '../../Models/Client/Client.model';
 import ChildrenParents from '../../Models/Child/Children-Parents.model';
@@ -14,10 +13,10 @@ import { AddressModule } from '../address/address.module';
 import { JobsModule } from '../jobs/jobs.module';
 import { ChildModule } from '../child/child.module';
 import { CommunicationModule } from '../communication/communication.module';
-import AddressesClients from '../../Models/Address/Addresses-Clients.model';
-import AddressesJobs from '../../Models/Address/Addresses-Jobs.model';
-import { AddressService } from '../address/address.service';
-import { ChildService } from '../child/child.service';
+import LivingAddress from '../../Models/Address/Living-Address.model';
+import RegAddress from '../../Models/Address/Reg-Address.model';
+import FactAddress from '../../Models/Address/Fact-Address.model';
+import JurAddress from '../../Models/Address/Jur-Address.model';
 
 @Module({
     providers: [ClientsService],
@@ -25,14 +24,15 @@ import { ChildService } from '../child/child.service';
     imports: [
         SequelizeModule.forFeature([
             Client,
-            Address,
             Child,
             ChildrenParents,
             Communication,
             Job,
             Passport,
-            AddressesClients,
-            AddressesJobs
+            LivingAddress,
+            RegAddress,
+            FactAddress,
+            JurAddress
         ]),
         PassportModule,
         AddressModule,

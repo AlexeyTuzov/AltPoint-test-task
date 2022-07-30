@@ -2,7 +2,7 @@ import {
     BelongsTo,
     BelongsToMany,
     Column,
-    DataType,
+    DataType, DefaultScope,
     ForeignKey,
     HasMany,
     HasOne,
@@ -13,12 +13,53 @@ import ClientCreationAttr from './Client.interface';
 import Child from '../Child/Child.model';
 import ChildrenParents from '../Child/Children-Parents.model';
 import Passport from '../Passport/Passport.model';
-import Address from '../Address/Address.model';
 import Job from '../Job/Job.model';
 import Communication from '../Communication/Communication.model';
 import * as uuid from 'uuid';
-import AddressesClients from '../Address/Addresses-Clients.model';
+import LivingAddress from '../Address/Living-Address.model';
+import RegAddress from '../Address/Reg-Address.model';
 
+/*
+@DefaultScope(() => ({
+    attributes: [
+        'id',
+        'name',
+        'surname',
+        'patronymic',
+        'dob',
+        'documentIds',
+        'curWorkExp',
+        'livingAddress',
+        'regAddress',
+        'typeEducation',
+        'monIncome',
+        'monExpenses',
+        'createdAt',
+        'updatedAt'
+    ],
+    include: [
+        Child,
+        Passport,
+        Communication,
+        Job,
+        {
+            model: Address,
+            as: 'livingAddress',
+            through: {
+                attributes: []
+            }
+        },
+        {
+            model: Address,
+            as: 'regAddress',
+            through: {
+                attributes: []
+            }
+        }
+    ]
+}))
+
+ */
 @Table({ tableName: 'Clients' })
 export default class Client extends Model<Client, ClientCreationAttr> {
 
@@ -53,10 +94,10 @@ export default class Client extends Model<Client, ClientCreationAttr> {
     children: Child[];
     @HasOne(() => Passport)
     passport: Passport;
-    @BelongsToMany(() => Address, () => AddressesClients)
-    livingAddress: Address;
-    @BelongsToMany(() => Address, () => AddressesClients)
-    regAddress: Address;
+    @HasOne(() => LivingAddress)
+    livingAddress: LivingAddress;
+    @HasOne(() => RegAddress)
+    regAddress: RegAddress;
     @HasMany(() => Job)
     jobs: Job[];
     @HasMany(() => Communication)

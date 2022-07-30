@@ -1,3 +1,10 @@
+export enum addressType {
+    LIVING_ADDRESS,
+    REG_ADDRESS,
+    FACT_ADDRESS,
+    JUR_ADDRESS
+}
+
 export default class CreateAddressDto {
     readonly zipCode: string;
     readonly country: string;
@@ -8,4 +15,5 @@ export default class CreateAddressDto {
     readonly apartment: string;
     readonly jobID?: string;
     readonly clientID?: string;
+    readonly addressType: addressType;
 }

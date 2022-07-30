@@ -1,10 +1,8 @@
 import {
     BelongsTo,
-    BelongsToMany,
     Column,
     DataType,
     ForeignKey,
-    HasMany,
     HasOne,
     Model,
     Table
@@ -12,8 +10,8 @@ import {
 import JobCreationAttr from './Job.interface';
 import Client from '../Client/Client.model';
 import * as uuid from 'uuid';
-import Address from '../Address/Address.model';
-import AddressesJobs from '../Address/Addresses-Jobs.model';
+import FactAddress from '../Address/Fact-Address.model';
+import JurAddress from '../Address/Jur-Address.model';
 
 @Table({ tableName: 'Jobs' })
 export default class Job extends Model<Job, JobCreationAttr> {
@@ -39,8 +37,8 @@ export default class Job extends Model<Job, JobCreationAttr> {
     @Column({ type: DataType.STRING, allowNull: false })
     clientID: string;
 
-    @BelongsToMany(() => Address, () => AddressesJobs)
-    factAddress: Address;
-    @BelongsToMany(() => Address, () => AddressesJobs)
-    jurAddress: Address;
+    @HasOne(() => FactAddress)
+    factAddress: FactAddress;
+    @HasOne(() => JurAddress)
+    jurAddress: JurAddress;
 }
