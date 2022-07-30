@@ -19,7 +19,7 @@ import * as uuid from 'uuid';
 import LivingAddress from '../Address/Living-Address.model';
 import RegAddress from '../Address/Reg-Address.model';
 
-/*
+
 @DefaultScope(() => ({
     attributes: [
         'id',
@@ -29,8 +29,6 @@ import RegAddress from '../Address/Reg-Address.model';
         'dob',
         'documentIds',
         'curWorkExp',
-        'livingAddress',
-        'regAddress',
         'typeEducation',
         'monIncome',
         'monExpenses',
@@ -38,28 +36,19 @@ import RegAddress from '../Address/Reg-Address.model';
         'updatedAt'
     ],
     include: [
-        Child,
-        Passport,
-        Communication,
-        Job,
         {
-            model: Address,
-            as: 'livingAddress',
+            model: Child,
             through: {
                 attributes: []
             }
         },
-        {
-            model: Address,
-            as: 'regAddress',
-            through: {
-                attributes: []
-            }
-        }
+        Passport,
+        Communication,
+        Job,
+        LivingAddress,
+        RegAddress
     ]
 }))
-
- */
 @Table({ tableName: 'Clients' })
 export default class Client extends Model<Client, ClientCreationAttr> {
 

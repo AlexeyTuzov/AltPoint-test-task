@@ -74,7 +74,6 @@ export class ClientsService {
             if (dto)
                 return newClient.id;
         } catch (err) {
-            console.log(err);
             throw new HttpException({
                 'status': HttpStatus.INTERNAL_SERVER_ERROR,
                 'code': 'INTERNAL_SERVER_ERROR'
@@ -85,15 +84,16 @@ export class ClientsService {
     async getClientWithSpouse(id: string) {
         try {
             let foundUser = await this.clientRepository.findByPk(id, { include: { all: true } });
-            if (!foundUser) {
-                throw new HttpException({
+            if (foundUser) {
+                return foundUser;
+            } else {
+                return new HttpException({
                     'status': HttpStatus.NOT_FOUND,
                     'code': 'ENTITY_NOT_FOUND'
-                }, HttpStatus.NOT_FOUND);
-            } else {
-                return foundUser;
+                }, HttpStatus.NOT_FOUND).getResponse();
             }
         } catch (err) {
+            console.log(err);
             throw new HttpException({
                 'status': HttpStatus.INTERNAL_SERVER_ERROR,
                 'code': 'INTERNAL_SERVER_ERROR'

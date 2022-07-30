@@ -1,9 +1,18 @@
-import { BelongsToMany, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsToMany, Column, DataType, DefaultScope, Model, Table } from 'sequelize-typescript';
 import ChildCreationAttr from './Child.interface';
 import Client from '../Client/Client.model';
 import ChildrenParents from './Children-Parents.model';
 import * as uuid from 'uuid';
 
+@DefaultScope(() => ({
+    attributes: [
+        'id',
+        'name',
+        'surname',
+        'patronymic',
+        'dob'
+    ]
+}))
 @Table({ tableName: 'Children' })
 export default class Child extends Model<Child, ChildCreationAttr> {
 

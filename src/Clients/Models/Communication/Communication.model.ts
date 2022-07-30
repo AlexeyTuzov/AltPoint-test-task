@@ -1,8 +1,15 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, Model, Table } from 'sequelize-typescript';
 import CommunicationCreationAttr from './Communication.interface';
 import Client from '../Client/Client.model';
 import * as uuid from 'uuid';
 
+@DefaultScope(() => ({
+    attributes: [
+        'id',
+        'type',
+        'value'
+    ]
+}))
 @Table({ tableName: 'Communications' })
 export default class Communication extends Model<Communication, CommunicationCreationAttr> {
 

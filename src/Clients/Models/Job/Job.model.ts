@@ -1,7 +1,7 @@
 import {
     BelongsTo,
     Column,
-    DataType,
+    DataType, DefaultScope,
     ForeignKey,
     HasOne,
     Model,
@@ -13,6 +13,21 @@ import * as uuid from 'uuid';
 import FactAddress from '../Address/Fact-Address.model';
 import JurAddress from '../Address/Jur-Address.model';
 
+@DefaultScope(() => ({
+    attributes: [
+        'id',
+        'type',
+        'dateEmp',
+        'dateDismissal',
+        'monIncome',
+        'tin',
+        'phoneNumber'
+    ],
+    include: [
+        FactAddress,
+        JurAddress
+    ]
+}))
 @Table({ tableName: 'Jobs' })
 export default class Job extends Model<Job, JobCreationAttr> {
 

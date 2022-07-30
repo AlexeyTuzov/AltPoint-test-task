@@ -1,8 +1,22 @@
-import { BelongsTo, Column, DataType, ForeignKey, Model, Table } from 'sequelize-typescript';
+import { BelongsTo, Column, DataType, DefaultScope, ForeignKey, Model, Table } from 'sequelize-typescript';
 import AddressCreationAttr from './Address.interface';
 import Job from '../Job/Job.model';
 import * as uuid from 'uuid';
 
+@DefaultScope(() => ({
+    attributes: [
+        'id',
+        'zipCode',
+        'country',
+        'region',
+        'city',
+        'street',
+        'house',
+        'apartment',
+        'createdAt',
+        'updatedAt'
+    ]
+}))
 @Table({ tableName: 'Fact Addresses' })
 export default class FactAddress extends Model<FactAddress, AddressCreationAttr> {
 
