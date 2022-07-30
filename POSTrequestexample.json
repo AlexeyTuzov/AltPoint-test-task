@@ -1,0 +1,151 @@
+{
+  "name": "Иван",
+  "surname": "Иванов",
+  "patronymic": "Иванович",
+  "dob": "1985-08-11",
+  "children": [
+    {
+      "name": "Олег",
+      "surname": "Иванов",
+      "patronymic": "Иванович",
+      "dob": "2015-07-10"
+    },
+    {
+      "name": "Ольга",
+      "surname": "Иванова",
+      "patronymic": "Ивановна",
+      "dob": "2018-07-10"
+    }
+  ],
+  "documentIds": [
+    "12345",
+    "67890"
+  ],
+  "passport": {
+    "series": "7474",
+    "number": "121121",
+    "giver": "ОУФМ Челябинской обл. по Центральному р-ну гор.Челябинска",
+    "dateIssued": "2022-07-10"
+  },
+  "livingAddress": {
+    "zipCode": "444005",
+    "country": "Россия",
+    "region": "Челябинская",
+    "city": "Магнитогорск",
+    "street": "ул. Пушкина",
+    "house": "142",
+    "apartment": "36"
+  },
+  "regAddress": {
+    "zipCode": "456510",
+    "country": "Россия",
+    "region": "Челябинская область",
+    "city": "Челябинск",
+    "street": "Ленина",
+    "house": "69",
+    "apartment": "9"
+  },
+  "jobs": [
+    {
+      "type": "main",
+      "dateEmp": "2022-07-10",
+      "dateDismissal": "2022-07-10",
+      "monIncome": 55.55,
+      "tin": "165718275080",
+      "factAddress": {
+        "zipCode": "444005",
+        "country": "Россия",
+        "region": "Московская область",
+        "city": "Орехово-Зуево",
+        "street": "Центральная",
+        "house": "12",
+        "apartment": "34"
+      },
+      "jurAddress": {
+        "zipCode": "444005",
+        "country": "Россия",
+        "region": "Московская область",
+        "city": "Москва",
+        "street": "Кутузовский проспект",
+        "house": "145",
+        "apartment": "34б"
+      },
+      "phoneNumber": "79821048575"
+    }
+  ],
+  "typeEducation": "secondary",
+  "monIncome": 55.55,
+  "monExpenses": 55.55,
+  "communications": [
+    {
+      "type": "phone",
+      "value": "79821048575"
+    },
+    {
+      "type": "email",
+      "value": "email@mail.com"
+    }
+  ],
+  "spouse": {
+    "name": "Алена",
+    "surname": "Иванова",
+    "patronymic": "Петровна",
+    "dob": "1987-08-11",
+    "children": [
+      {
+        "name": "Олег",
+        "surname": "Иванов",
+        "patronymic": "Иванович",
+        "dob": "2015-07-10"
+      },
+      {
+        "name": "Ольга",
+        "surname": "Иванова",
+        "patronymic": "Ивановна",
+        "dob": "2018-07-10"
+      }
+    ],
+    "documentIds": [
+      "12345",
+      "67890"
+    ],
+    "passport": {
+      "series": "7475",
+      "number": "125654",
+      "giver": "ОУФМ Челябинской обл. по Центральному р-ну гор.Челябинска",
+      "dateIssued": "2020-07-10"
+    },
+    "livingAddress": {
+      "zipCode": "444005",
+      "country": "Россия",
+      "region": "Челябинская",
+      "city": "Магнитогорск",
+      "street": "ул. Пушкина",
+      "house": "142",
+      "apartment": "36"
+    },
+    "regAddress": {
+      "zipCode": "456510",
+      "country": "Россия",
+      "region": "Челябинская область",
+      "city": "Челябинск",
+      "street": "Ленина",
+      "house": "69",
+      "apartment": "9"
+    },
+    "jobs": [],
+    "typeEducation": "higher",
+    "monIncome": 0.00,
+    "monExpenses": 0.00,
+    "communications": [
+      {
+        "type": "phone",
+        "value": "79821048580"
+      },
+      {
+        "type": "email",
+        "value": "emailofspouse@mail.com"
+      }
+    ]
+  }
+}

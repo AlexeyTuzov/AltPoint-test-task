@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import Client from '../../Models/Client/Client.model';
-import CreateClientDto from './DTO/create-client.dto';
+import CreateClientDto, { CreateClientWithSpouseDto } from './DTO/create-client.dto';
 import UpdateClientDto from './DTO/update-client.dto';
 import { PassportService } from '../passport/passport.service';
 import { AddressService } from '../address/address.service';
@@ -33,10 +33,14 @@ export class ClientsService {
             await this.passportService.createPassport({ ...dto.passport, clientID: newClient.id });
         }
         if (dto.livingAddress) {
-            await this.addressService.createAddress({ ...dto.livingAddress, clientID: newClient.id });
+            let newAddress = await this.addressService.createAddress({ ...dto.livingAddress, clientID: newClient.id });
+            await newAddress.$add('client', newClient.id);
+            await newClient.$add('livingAddress', newAddress.id);
         }
         if (dto.regAddress) {
-            await this.addressService.createAddress({ ...dto.regAddress, clientID: newClient.id });
+            let newAddress = await this.addressService.createAddress({ ...dto.regAddress, clientID: newClient.id });
+            await newAddress.$add('client', newClient.id);
+            await newClient.$add('regAddress', newAddress.id);
         }
         if (dto.jobs && dto.jobs.length > 0) {
             for (let job of dto.jobs) {
@@ -53,10 +57,11 @@ export class ClientsService {
         if (dto.communications && dto.communications.length > 0) {
             for (let comm of dto.communications) {
                 await this.communicationService.createCommunication({ ...comm, clientID: newClient.id });
+
             }
         }
-
-        return newClient.id;
+        if (dto)
+            return newClient.id;
     }
 
     async getClientWithSpouse(id: string) {

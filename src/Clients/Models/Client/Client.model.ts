@@ -1,4 +1,14 @@
-import { BelongsToMany, Column, DataType, HasMany, HasOne, Model, Table } from 'sequelize-typescript';
+import {
+    BelongsTo,
+    BelongsToMany,
+    Column,
+    DataType,
+    ForeignKey,
+    HasMany,
+    HasOne,
+    Model,
+    Table
+} from 'sequelize-typescript';
 import ClientCreationAttr from './Client.interface';
 import Child from '../Child/Child.model';
 import ChildrenParents from '../Child/Children-Parents.model';
@@ -51,4 +61,9 @@ export default class Client extends Model<Client, ClientCreationAttr> {
     jobs: Job[];
     @HasMany(() => Communication)
     communications: Communication[];
+    @BelongsTo(() => Client)
+    spouse: Client;
+    @ForeignKey(() => Client)
+    @Column({type: DataType.STRING, allowNull: true})
+    spouseID: string;
 }

@@ -28,4 +28,9 @@ export default class CreateClientDto {
     readonly monIncome: number;
     readonly monExpenses: number;
     readonly communications: CreateCommunicationDto[];
+    readonly spouseID: string;
+}
+
+export class CreateClientWithSpouseDto extends CreateClientDto {
+    readonly spouse?: CreateClientDto;
 }

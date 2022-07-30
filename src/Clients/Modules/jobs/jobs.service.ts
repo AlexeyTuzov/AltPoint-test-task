@@ -16,10 +16,14 @@ export class JobsService {
         const generatedID = uuid.v4();
         const newJob = await this.jobsRepository.create({ ...dto, id: generatedID});
         if (dto.factAddress) {
-            await this.addressService.createAddress({ ...dto.factAddress, jobID: newJob.id});
+            let newAddress = await this.addressService.createAddress({ ...dto.factAddress, jobID: newJob.id});
+            await newJob.$add('factAddress', newAddress.id);
+            await newAddress.$add('job', newJob.id);
         }
         if (dto.jurAddress) {
-            await this.addressService.createAddress({ ...dto.jurAddress, jobID: newJob.id});
+            let newAddress = await this.addressService.createAddress({ ...dto.jurAddress, jobID: newJob.id});
+            await newJob.$add('jurAddress', newAddress.id);
+            await newAddress.$add('job', newJob.id);
         }
         return newJob;
     }

@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
 import { ClientsService } from './clients.service';
-import CreateClientDto from './DTO/create-client.dto';
+import CreateClientDto, { CreateClientWithSpouseDto } from './DTO/create-client.dto';
 import UpdateClientDto from './DTO/update-client.dto';
 
 @Controller('clients')
@@ -15,7 +15,11 @@ export class ClientsController {
     }
 
     @Post()
-    createClient(@Body() dto: CreateClientDto) {
+    async createClient(@Body() dto: CreateClientWithSpouseDto) {
+        if (dto.spouse) {
+            let spouseID: string = await this.clientsService.createClient(dto.spouse);
+            return this.clientsService.createClient({...dto, spouseID});
+        }
         return this.clientsService.createClient(dto);
     }
 
