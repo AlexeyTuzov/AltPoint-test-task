@@ -37,7 +37,7 @@ export class ClientsController {
     }
 
     @Delete('/:id')
-    softDeleteClient(@Param() id: string) {
+    softDeleteClient(@Param('id') id: string) {
         return this.clientsService.softDeleteClient(id);
     }
 }

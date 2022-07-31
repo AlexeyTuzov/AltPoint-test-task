@@ -11,7 +11,6 @@ import { CommunicationService } from '../communication/communication.service';
 import * as uuid from 'uuid';
 import { addressType } from '../address/DTO/create-address.dto';
 
-
 @Injectable()
 export class ClientsService {
 
@@ -83,7 +82,15 @@ export class ClientsService {
 
     async getClientWithSpouse(id: string) {
         try {
-            let foundUser = await this.clientRepository.findByPk(id, { include: { all: true } });
+            let foundUser = await this.clientRepository.findOne({
+                where: {
+                    id,
+                    deletedAt: null
+                },
+                include: {
+                    all: true
+                }
+            });
             if (foundUser) {
                 return foundUser;
             } else {
@@ -103,13 +110,42 @@ export class ClientsService {
     }
 
     async updateClient(id: string, dto: UpdateClientDto) {
-        const client = await this.clientRepository.findByPk(id);
+        const client = await this.clientRepository.findOne({
+            where: {
+                id,
+                deletedAt: null
+            }
+        });
         //TODO: update with dto
     }
 
     async softDeleteClient(id: string) {
-        const client = await this.clientRepository.findByPk(id);
-        client.deletedAt = Date.now().toString();
-        return;
+
+        try {
+            const client = await this.clientRepository.scope('withDeleted').findOne({
+                where: {
+                    id,
+                    deletedAt: null
+                }
+            });
+            if (client) {
+                client.deletedAt = new Date().toDateString();
+                await client.save();
+                return new HttpException({
+                    'status': HttpStatus.NO_CONTENT,
+                    'code': 'Client softly deleted!'
+                }, HttpStatus.NO_CONTENT).getResponse();
+            } else {
+                return new HttpException({
+                    'status': HttpStatus.NOT_FOUND,
+                    'code': 'ENTITY_NOT_FOUND'
+                }, HttpStatus.NOT_FOUND).getResponse();
+            }
+        } catch (err) {
+            throw new HttpException({
+                'status': HttpStatus.INTERNAL_SERVER_ERROR,
+                'code': 'INTERNAL_SERVER_ERROR'
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

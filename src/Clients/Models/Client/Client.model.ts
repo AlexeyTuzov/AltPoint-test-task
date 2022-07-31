@@ -6,7 +6,7 @@ import {
     ForeignKey,
     HasMany,
     HasOne,
-    Model,
+    Model, Scopes,
     Table
 } from 'sequelize-typescript';
 import ClientCreationAttr from './Client.interface';
@@ -18,7 +18,6 @@ import Communication from '../Communication/Communication.model';
 import * as uuid from 'uuid';
 import LivingAddress from '../Address/Living-Address.model';
 import RegAddress from '../Address/Reg-Address.model';
-
 
 @DefaultScope(() => ({
     attributes: [
@@ -48,6 +47,13 @@ import RegAddress from '../Address/Reg-Address.model';
         LivingAddress,
         RegAddress
     ]
+}))
+@Scopes(() => ({
+    withDeleted: {
+        include: {
+            all: true
+        }
+    }
 }))
 @Table({ tableName: 'Clients' })
 export default class Client extends Model<Client, ClientCreationAttr> {
