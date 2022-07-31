@@ -23,7 +23,14 @@ export class ClientsService {
     }
 
     async getAllClients() {
-        return await this.clientRepository.findAll({ where: { deletedAt: null }, include: { all: true } });
+        try {
+            return await this.clientRepository.findAll({ where: { deletedAt: null } });
+        } catch (err) {
+            throw new HttpException({
+                'status': HttpStatus.INTERNAL_SERVER_ERROR,
+                'code': 'INTERNAL_SERVER_ERROR'
+            }, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     async createClient(dto: CreateClientDto) {
@@ -53,13 +60,15 @@ export class ClientsService {
             }
             if (dto.jobs && dto.jobs.length > 0) {
                 for (let job of dto.jobs) {
-                    console.log('job creation new Client ID:', newClient.id);
                     await this.jobsService.createJob({ ...job, clientID: newClient.id });
                 }
             }
             if (dto.children && dto.children.length > 0) {
                 for (let child of dto.children) {
-                    let newChild = await this.childService.createChild({ ...child });
+                    let newChild = await this.childService.checkIfChildExist({ ...child });
+                    if (!newChild) {
+                        newChild = await this.childService.createChild({ ...child });
+                    }
                     await newChild.$add('parents', newClient.id);
                     await newClient.$add('children', newChild.id);
                 }
@@ -67,7 +76,6 @@ export class ClientsService {
             if (dto.communications && dto.communications.length > 0) {
                 for (let comm of dto.communications) {
                     await this.communicationService.createCommunication({ ...comm, clientID: newClient.id });
-
                 }
             }
             if (dto)
@@ -100,7 +108,6 @@ export class ClientsService {
                 }, HttpStatus.NOT_FOUND).getResponse();
             }
         } catch (err) {
-            console.log(err);
             throw new HttpException({
                 'status': HttpStatus.INTERNAL_SERVER_ERROR,
                 'code': 'INTERNAL_SERVER_ERROR'
@@ -122,7 +129,7 @@ export class ClientsService {
     async softDeleteClient(id: string) {
 
         try {
-            const client = await this.clientRepository.scope('withDeleted').findOne({
+            const client = await this.clientRepository.scope('includeAll').findOne({
                 where: {
                     id,
                     deletedAt: null

@@ -15,8 +15,8 @@ export class ChildService {
         return await this.childRepository.create( { ...dto, id: generatedID});
     }
 
-    async getAll() {
-        return await this.childRepository.findAll({include: {all: true}})
+    async checkIfChildExist(dto: CreateChildDto) {
+        return await this.childRepository.findOne({ where: {...dto} });
     }
 
 }

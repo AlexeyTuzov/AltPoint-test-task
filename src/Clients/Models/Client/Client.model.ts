@@ -20,20 +20,9 @@ import LivingAddress from '../Address/Living-Address.model';
 import RegAddress from '../Address/Reg-Address.model';
 
 @DefaultScope(() => ({
-    attributes: [
-        'id',
-        'name',
-        'surname',
-        'patronymic',
-        'dob',
-        'documentIds',
-        'curWorkExp',
-        'typeEducation',
-        'monIncome',
-        'monExpenses',
-        'createdAt',
-        'updatedAt'
-    ],
+    attributes: {
+        exclude: ['spouseID', 'deletedAt']
+    },
     include: [
         {
             model: Child,
@@ -49,7 +38,7 @@ import RegAddress from '../Address/Reg-Address.model';
     ]
 }))
 @Scopes(() => ({
-    withDeleted: {
+    includeAll: {
         include: {
             all: true
         }
@@ -97,9 +86,9 @@ export default class Client extends Model<Client, ClientCreationAttr> {
     jobs: Job[];
     @HasMany(() => Communication)
     communications: Communication[];
-    @BelongsTo(() => Client)
+    @BelongsTo(() => Client, {})
     spouse: Client;
     @ForeignKey(() => Client)
-    @Column({type: DataType.STRING, allowNull: true})
+    @Column({ type: DataType.STRING, allowNull: true })
     spouseID: string;
 }
