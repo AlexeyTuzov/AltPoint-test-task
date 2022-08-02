@@ -40,6 +40,6 @@ export default class RegAddress extends Model<RegAddress, AddressCreationAttr> {
     @BelongsTo(() => Client)
     client: Client;
     @ForeignKey(() => Client)
-    @Column({type: DataType.STRING, allowNull: false})
+    @Column({type: DataType.STRING, allowNull: false, onDelete: 'cascade'})
     clientID: string;
 }

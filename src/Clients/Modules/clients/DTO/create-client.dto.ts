@@ -4,7 +4,7 @@ import CreateAddressDto from '../../address/DTO/create-address.dto';
 import CreateJobDto from '../../jobs/DTO/create-job.dto';
 import CreateCommunicationDto from '../../communication/DTO/create-communication.dto';
 
-enum EducationType {
+export enum EducationType {
 'secondary' = 'secondary',
 'secondarySpecial' = 'secondarySpecial',
 'incompleteHigher' = 'incompleteHigher',

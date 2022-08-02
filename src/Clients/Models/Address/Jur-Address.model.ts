@@ -40,6 +40,6 @@ export default class JurAddress extends Model<JurAddress, AddressCreationAttr> {
     @BelongsTo(() => Job)
     job: Job;
     @ForeignKey(() => Job)
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false, onDelete: 'cascade' })
     jobID: string;
 }

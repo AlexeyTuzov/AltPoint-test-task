@@ -40,6 +40,6 @@ export default class FactAddress extends Model<FactAddress, AddressCreationAttr>
     @BelongsTo(() => Job)
     job: Job;
     @ForeignKey(() => Job)
-    @Column({ type: DataType.STRING, allowNull: false })
+    @Column({ type: DataType.STRING, allowNull: false, onDelete: 'cascade' })
     jobID: string;
 }

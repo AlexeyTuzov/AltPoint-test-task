@@ -11,7 +11,20 @@ export class CommunicationService {
     }
 
     async createCommunication(dto: CreateCommunicationDto) {
+
         const generatedID = uuid.v4();
         return await this.communicationRepository.create({ ...dto, id: generatedID });
+    }
+
+    async updateCommunications(dto: CreateCommunicationDto[] | null, clientID: string) {
+
+        await this.communicationRepository.destroy({ where: { clientID } });
+        if (dto === null) {
+            return;
+        }
+        for await (let comm of dto) {
+            await this.createCommunication({ ...comm, clientID });
+        }
+        return;
     }
 }

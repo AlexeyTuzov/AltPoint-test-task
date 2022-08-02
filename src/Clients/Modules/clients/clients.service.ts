@@ -9,7 +9,9 @@ import { JobsService } from '../jobs/jobs.service';
 import { ChildService } from '../child/child.service';
 import { CommunicationService } from '../communication/communication.service';
 import * as uuid from 'uuid';
-import { addressType } from '../address/DTO/create-address.dto';
+import { addressTypes } from '../address/DTO/create-address.dto';
+import HttpExceptionServerError from '../../Utilites/HttpExceptionServerError';
+import HttpExceptionNotFound from '../../Utilites/HttpExceptionNotFound';
 
 @Injectable()
 export class ClientsService {
@@ -23,13 +25,11 @@ export class ClientsService {
     }
 
     async getAllClients() {
+
         try {
             return await this.clientRepository.findAll({ where: { deletedAt: null } });
         } catch (err) {
-            throw new HttpException({
-                'status': HttpStatus.INTERNAL_SERVER_ERROR,
-                'code': 'INTERNAL_SERVER_ERROR'
-            }, HttpStatus.INTERNAL_SERVER_ERROR);
+            HttpExceptionServerError();
         }
     }
 
@@ -46,7 +46,7 @@ export class ClientsService {
                 await this.addressService.createAddress({
                     ...dto.livingAddress,
                     clientID: newClient.id,
-                    addressType: addressType.LIVING_ADDRESS
+                    addressType: addressTypes.LIVING_ADDRESS
                 });
             }
             if (dto.regAddress) {
@@ -54,7 +54,7 @@ export class ClientsService {
                     {
                         ...dto.regAddress,
                         clientID: newClient.id,
-                        addressType: addressType.REG_ADDRESS
+                        addressType: addressTypes.REG_ADDRESS
                     }
                 );
             }
@@ -64,7 +64,7 @@ export class ClientsService {
                 }
             }
             if (dto.children && dto.children.length > 0) {
-                for (let child of dto.children) {
+                for await (let child of dto.children) {
                     let newChild = await this.childService.checkIfChildExist({ ...child });
                     if (!newChild) {
                         newChild = await this.childService.createChild({ ...child });
@@ -74,23 +74,21 @@ export class ClientsService {
                 }
             }
             if (dto.communications && dto.communications.length > 0) {
-                for (let comm of dto.communications) {
+                for await (let comm of dto.communications) {
                     await this.communicationService.createCommunication({ ...comm, clientID: newClient.id });
                 }
             }
             if (dto)
                 return newClient.id;
         } catch (err) {
-            throw new HttpException({
-                'status': HttpStatus.INTERNAL_SERVER_ERROR,
-                'code': 'INTERNAL_SERVER_ERROR'
-            }, HttpStatus.INTERNAL_SERVER_ERROR);
+            HttpExceptionServerError();
         }
     }
 
     async getClientWithSpouse(id: string) {
+
         try {
-            let foundUser = await this.clientRepository.findOne({
+            let client = await this.clientRepository.findOne({
                 where: {
                     id,
                     deletedAt: null
@@ -99,31 +97,75 @@ export class ClientsService {
                     all: true
                 }
             });
-            if (foundUser) {
-                return foundUser;
+            if (client) {
+                return client;
             } else {
-                return new HttpException({
-                    'status': HttpStatus.NOT_FOUND,
-                    'code': 'ENTITY_NOT_FOUND'
-                }, HttpStatus.NOT_FOUND).getResponse();
+                return HttpExceptionNotFound();
             }
         } catch (err) {
-            throw new HttpException({
-                'status': HttpStatus.INTERNAL_SERVER_ERROR,
-                'code': 'INTERNAL_SERVER_ERROR'
-            }, HttpStatus.INTERNAL_SERVER_ERROR);
+            HttpExceptionServerError();
         }
 
     }
 
     async updateClient(id: string, dto: UpdateClientDto) {
-        const client = await this.clientRepository.findOne({
-            where: {
-                id,
-                deletedAt: null
+
+        try {
+            const client = await this.clientRepository.scope('includeAll').findOne({
+                where: {
+                    id,
+                    deletedAt: null
+                }
+            });
+            if (client) {
+                for (let key in dto) {
+                    if (dto.hasOwnProperty(key)) {
+                        await this.clientRepository.update({ [key]: dto[key] }, { where: { id } });
+                        switch (key) {
+
+                            case 'passport':
+                                await this.passportService.updatePassport(dto[key], client.id);
+                                break;
+
+                            case 'livingAddress':
+                                await this.addressService.updateAddress(dto[key],
+                                    addressTypes.LIVING_ADDRESS,
+                                    client.id);
+                                break;
+
+                            case 'regAddress':
+                                await this.addressService.updateAddress(dto[key],
+                                    addressTypes.REG_ADDRESS,
+                                    client.id);
+                                break;
+
+                            case 'communications':
+                                await this.communicationService.updateCommunications(dto[key], client.id);
+                                break;
+
+                            case 'children':
+                                await this.childService.updateChildren(dto[key], client.id);
+                                break;
+
+                            case 'jobs':
+                                await this.jobsService.updateJobs(dto[key], client.id);
+                                break;
+
+                            default:
+                                break;
+                        }
+                    }
+                }
+                return new HttpException({
+                    'status': HttpStatus.NO_CONTENT,
+                    'code': 'Client data successfully updated!'
+                }, HttpStatus.NO_CONTENT).getResponse();
+            } else {
+                return HttpExceptionNotFound();
             }
-        });
-        //TODO: update with dto
+        } catch (err) {
+            HttpExceptionServerError();
+        }
     }
 
     async softDeleteClient(id: string) {
@@ -143,16 +185,10 @@ export class ClientsService {
                     'code': 'Client softly deleted!'
                 }, HttpStatus.NO_CONTENT).getResponse();
             } else {
-                return new HttpException({
-                    'status': HttpStatus.NOT_FOUND,
-                    'code': 'ENTITY_NOT_FOUND'
-                }, HttpStatus.NOT_FOUND).getResponse();
+                return HttpExceptionNotFound();
             }
         } catch (err) {
-            throw new HttpException({
-                'status': HttpStatus.INTERNAL_SERVER_ERROR,
-                'code': 'INTERNAL_SERVER_ERROR'
-            }, HttpStatus.INTERNAL_SERVER_ERROR);
+            HttpExceptionServerError();
         }
     }
 }
