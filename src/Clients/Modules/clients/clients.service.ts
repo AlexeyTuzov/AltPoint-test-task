@@ -12,6 +12,8 @@ import * as uuid from 'uuid';
 import { addressTypes } from '../address/DTO/create-address.dto';
 import HttpExceptionServerError from '../../Utilites/HttpExceptionServerError';
 import HttpExceptionNotFound from '../../Utilites/HttpExceptionNotFound';
+import SearchClientsDto from './DTO/search-clients.dto';
+import { Order, Op } from 'sequelize';
 
 @Injectable()
 export class ClientsService {
@@ -24,10 +26,40 @@ export class ClientsService {
                 private communicationService: CommunicationService) {
     }
 
-    async getAllClients() {
+    async getAllClients(dto: SearchClientsDto) {
 
         try {
-            return await this.clientRepository.findAll({ where: { deletedAt: null } });
+            let order: Order = [[`${dto.sortBy}`, 'ASC']];
+            if (dto.sortDir && dto.sortDir === 'desc') {
+                order = [[`${dto.sortBy}`, 'DESC']];
+            }
+            let offset = dto.limit * (dto.page - 1);
+            if (offset < 0) offset = 0;
+
+            const searchConditions = dto.search ?
+                {
+                    deletedAt: null,
+                    [dto.sortBy]: {
+                        [Op.like]: `%${dto.search}%`
+                    }
+                } :
+                {
+                    deletedAt: null
+                };
+
+            const { count, rows } = await this.clientRepository.scope('notDeleted').findAndCountAll({
+                where: searchConditions,
+                offset: offset,
+                limit: dto.limit,
+                order: order
+            });
+            return {
+                limit: dto.limit,
+                page: dto.page,
+                total: count,
+                data: [...rows]
+            };
+
         } catch (err) {
             HttpExceptionServerError();
         }
@@ -160,8 +192,7 @@ export class ClientsService {
                                 if (client.spouseID) {
                                     await this.updateClient(client.spouseID, dto[key]);
                                     break;
-                                }
-                                else {
+                                } else {
                                     client.spouseID = await this.createClient(dto[key]);
                                     break;
                                 }

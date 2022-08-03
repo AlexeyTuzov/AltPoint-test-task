@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Patch, Post, Query } from '@nestjs/common';
 import { ClientsService } from './clients.service';
 import CreateClientDto, { CreateClientWithSpouseDto } from './DTO/create-client.dto';
 import UpdateClientDto from './DTO/update-client.dto';
+import SearchClientsDto from './DTO/search-clients.dto';
 
 @Controller('clients')
 export class ClientsController {
@@ -10,8 +11,8 @@ export class ClientsController {
     }
 
     @Get()
-    getAllClients() {
-        return this.clientsService.getAllClients();
+    getAllClients(@Query() dto: SearchClientsDto) {
+        return this.clientsService.getAllClients(dto);
     }
 
     @Post()

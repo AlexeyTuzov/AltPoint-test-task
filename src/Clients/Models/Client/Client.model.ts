@@ -42,6 +42,11 @@ import RegAddress from '../Address/Reg-Address.model';
         include: {
             all: true
         }
+    },
+    notDeleted: {
+        where: {
+            deletedAt: null
+        }
     }
 }))
 @Table({ tableName: 'Clients' })
