@@ -151,6 +151,21 @@ export class ClientsService {
                                 await this.jobsService.updateJobs(dto[key], client.id);
                                 break;
 
+                            case 'spouse':
+                                if (dto[key] === null) {
+                                    client.spouseID = null;
+                                    await client.save();
+                                    break;
+                                }
+                                if (client.spouseID) {
+                                    await this.updateClient(client.spouseID, dto[key]);
+                                    break;
+                                }
+                                else {
+                                    client.spouseID = await this.createClient(dto[key]);
+                                    break;
+                                }
+
                             default:
                                 break;
                         }
@@ -164,6 +179,7 @@ export class ClientsService {
                 return HttpExceptionNotFound();
             }
         } catch (err) {
+            console.log(err);
             HttpExceptionServerError();
         }
     }

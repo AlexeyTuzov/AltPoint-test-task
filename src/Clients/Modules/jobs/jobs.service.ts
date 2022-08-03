@@ -40,7 +40,6 @@ export class JobsService {
 
     async updateJobs(dto: CreateJobDto[], clientID: string) {
 
-        try {
             await this.jobsRepository.destroy({ where: { clientID } });
             if (dto === null) {
                 return;
@@ -48,9 +47,5 @@ export class JobsService {
             for await (let job of dto) {
                 await this.createJob({...job, clientID});
             }
-        } catch (err) {
-            console.log(err);
-        }
-
     }
 }
