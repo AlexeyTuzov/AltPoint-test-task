@@ -179,7 +179,6 @@ export class ClientsService {
                 return HttpExceptionNotFound();
             }
         } catch (err) {
-            console.log(err);
             HttpExceptionServerError();
         }
     }
