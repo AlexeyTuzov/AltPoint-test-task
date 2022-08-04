@@ -39,9 +39,21 @@ import RegAddress from '../Address/Reg-Address.model';
 }))
 @Scopes(() => ({
     includeAll: {
-        include: {
-            all: true
-        }
+        include: [
+            { all: true },
+            {
+                model: Child,
+                through: {
+                    attributes: []
+                }
+            }
+        ],
+        where: {
+            deletedAt: null
+        },
+        attributes: {
+            exclude: ['spouseID', 'deletedAt']
+        },
     },
     notDeleted: {
         where: {

@@ -29,30 +29,30 @@ export class ClientsService {
     async getAllClients(dto: SearchClientsDto) {
 
         try {
-            let order: Order = [[`${dto.sortBy}`, 'ASC']];
+            const sortBy = dto.sortBy || 'createdAt';
+            let order: Order = [[`${sortBy}`, 'ASC']];
             if (dto.sortDir && dto.sortDir === 'desc') {
-                order = [[`${dto.sortBy}`, 'DESC']];
+                order = [[`${sortBy}`, 'DESC']];
             }
-            let offset = dto.limit * (dto.page - 1);
-            if (offset < 0) offset = 0;
+            let offset = +dto.limit * (dto.page - 1);
+            if (!offset || offset < 0) offset = 0;
 
             const searchConditions = dto.search ?
                 {
                     deletedAt: null,
-                    [dto.sortBy]: {
+                    [sortBy]: {
                         [Op.like]: `%${dto.search}%`
                     }
-                } :
-                {
-                    deletedAt: null
-                };
+                } : { deletedAt: null }
 
-            const { count, rows } = await this.clientRepository.scope('notDeleted').findAndCountAll({
+            const findParams = {
                 where: searchConditions,
-                offset: offset,
+                offset,
                 limit: dto.limit,
-                order: order
-            });
+                order
+            }
+            const count = await this.clientRepository.scope('notDeleted').count({ ...findParams });
+            const rows = await this.clientRepository.findAll({ ...findParams });
             return {
                 limit: dto.limit,
                 page: dto.page,
@@ -120,15 +120,7 @@ export class ClientsService {
     async getClientWithSpouse(id: string) {
 
         try {
-            let client = await this.clientRepository.findOne({
-                where: {
-                    id,
-                    deletedAt: null
-                },
-                include: {
-                    all: true
-                }
-            });
+            let client = await this.clientRepository.scope('includeAll').findByPk(id);
             if (client) {
                 return client;
             } else {
@@ -143,12 +135,7 @@ export class ClientsService {
     async updateClient(id: string, dto: UpdateClientDto) {
 
         try {
-            const client = await this.clientRepository.scope('includeAll').findOne({
-                where: {
-                    id,
-                    deletedAt: null
-                }
-            });
+            const client = await this.clientRepository.scope('includeAll').findByPk(id);
             if (client) {
                 for (let key in dto) {
                     if (dto.hasOwnProperty(key)) {
@@ -217,12 +204,7 @@ export class ClientsService {
     async softDeleteClient(id: string) {
 
         try {
-            const client = await this.clientRepository.scope('includeAll').findOne({
-                where: {
-                    id,
-                    deletedAt: null
-                }
-            });
+            const client = await this.clientRepository.scope('includeAll').findByPk(id);
             if (client) {
                 client.deletedAt = new Date().toDateString();
                 await client.save();
