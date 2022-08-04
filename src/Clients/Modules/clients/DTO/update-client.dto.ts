@@ -4,7 +4,7 @@ import CreateAddressDto from '../../address/DTO/create-address.dto';
 import CreateJobDto from '../../jobs/DTO/create-job.dto';
 import CreateCommunicationDto from '../../communication/DTO/create-communication.dto';
 import { EducationType } from './create-client.dto';
-import { IsArray, IsDateString, IsDefined, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { IsDateString, IsEnum, IsNumber, IsString, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 
 export default class UpdateClientDto {
@@ -19,12 +19,18 @@ export default class UpdateClientDto {
     @ValidateNested({ each: true })
     @Type(() => CreateChildDto)
     readonly children?: CreateChildDto[];
-    @IsDefined()
-    @IsArray()
     readonly documentIds?: string[];
+    @ValidateNested()
+    @Type(() => CreatePassportDto)
     readonly passport?: CreatePassportDto;
+    @ValidateNested()
+    @Type(() => CreateAddressDto)
     readonly livingAddress?: CreateAddressDto;
+    @ValidateNested()
+    @Type(() => CreateAddressDto)
     readonly regAddress?: CreateAddressDto;
+    @ValidateNested({ each: true })
+    @Type(() => CreateJobDto)
     readonly jobs?: CreateJobDto[];
     @IsEnum(EducationType)
     readonly typeEducation?: EducationType;
@@ -32,6 +38,8 @@ export default class UpdateClientDto {
     readonly monIncome?: number;
     @IsNumber({ maxDecimalPlaces: 2 })
     readonly monExpenses?: number;
+    @ValidateNested({ each: true })
+    @Type(() => CreateCommunicationDto)
     readonly communications?: CreateCommunicationDto[];
     readonly spouseID?: string;
 }

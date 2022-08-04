@@ -30,9 +30,17 @@ export default class CreateClientDto {
     @IsDefined()
     @IsArray()
     readonly documentIds: string[];
+    @ValidateNested()
+    @Type(() => CreatePassportDto)
     readonly passport: CreatePassportDto;
+    @ValidateNested()
+    @Type(() => CreateAddressDto)
     readonly livingAddress: CreateAddressDto;
+    @ValidateNested()
+    @Type(() => CreateAddressDto)
     readonly regAddress: CreateAddressDto;
+    @ValidateNested({ each: true })
+    @Type(() => CreateJobDto)
     readonly jobs: CreateJobDto[];
     @IsEnum(EducationType)
     readonly typeEducation: EducationType;
@@ -40,6 +48,8 @@ export default class CreateClientDto {
     readonly monIncome: number;
     @IsNumber({ maxDecimalPlaces: 2 })
     readonly monExpenses: number;
+    @ValidateNested({ each: true })
+    @Type(() => CreateCommunicationDto)
     readonly communications: CreateCommunicationDto[];
     readonly spouseID: string;
 }
