@@ -10,8 +10,8 @@ import { ChildService } from '../child/child.service';
 import { CommunicationService } from '../communication/communication.service';
 import * as uuid from 'uuid';
 import { addressTypes } from '../address/DTO/create-address.dto';
-import HttpExceptionServerError from '../../Utilites/HttpExceptionServerError';
-import HttpExceptionNotFound from '../../Utilites/HttpExceptionNotFound';
+import HttpExceptionServerError from '../../Exceptions/HttpExceptionServerError';
+import HttpExceptionNotFound from '../../Exceptions/HttpExceptionNotFound';
 import SearchClientsDto from './DTO/search-clients.dto';
 import { Order, Op } from 'sequelize';
 

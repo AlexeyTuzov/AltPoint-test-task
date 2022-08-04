@@ -28,8 +28,6 @@ export class ClientsController {
     @Get('/:id')
     getClientWithSpouse(@Param('id') id: string) {
         return this.clientsService.getClientWithSpouse(id);
-
-
     }
 
     @Patch('/:id')
