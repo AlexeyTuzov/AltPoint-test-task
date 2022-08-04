@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import Job from '../../Models/Job/Job.model';
 import { AddressService } from '../address/address.service';
-import CreateJobDto from './DTO/create-job.dto';
+import CreateJobDto, { UpdateJobDto } from './DTO/create-job.dto';
 import * as uuid from 'uuid';
 import { addressTypes } from '../address/DTO/create-address.dto';
+import Client from '../../Models/Client/Client.model';
 
 @Injectable()
 export class JobsService {
@@ -38,14 +39,40 @@ export class JobsService {
         return newJob;
     }
 
-    async updateJobs(dto: CreateJobDto[], clientID: string) {
+    async updateJobs(dto: UpdateJobDto[], clientID: string) {
 
-            await this.jobsRepository.destroy({ where: { clientID } });
-            if (dto === null) {
-                return;
+        if (dto === null) {
+            return;
+        }
+
+        let existingJobs = await this.jobsRepository.findAll({
+            include: [{
+                model: Client,
+                where: { id: clientID }
+            }]
+        });
+        for await (let job of existingJobs) {
+            if (!dto.find(item => item.id === job.id)) {
+                await job.destroy();
             }
-            for await (let job of dto) {
-                await this.createJob({...job, clientID});
+        }
+
+        for await (let job of dto) {
+            if (job.id) {
+                const existingJob = await this.jobsRepository.findOne({
+                    where: {id: job.id},
+                    include: [{
+                        model: Client,
+                        where: { id: clientID }
+                    }]
+                });
+                await existingJob.update({...job});
+                await this.addressService.updateAddress(job.factAddress, addressTypes.FACT_ADDRESS, null, job.id);
+                await this.addressService.updateAddress(job.jurAddress, addressTypes.JUR_ADDRESS, null, job.id);
+            } else {
+                await this.createJob({ ...job, clientID });
             }
+        }
+        return;
     }
 }

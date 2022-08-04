@@ -8,3 +8,7 @@ export default class CreateCommunicationDto {
     readonly value: string;
     readonly clientID: string;
 }
+
+export class UpdateCommunicationDto extends CreateCommunicationDto {
+    readonly id?: string;
+}

@@ -4,3 +4,7 @@ export default class CreateChildDto {
     readonly patronymic: string;
     readonly dob: string;
 }
+
+export class UpdateChildDto extends CreateChildDto {
+    readonly id?: string;
+}
