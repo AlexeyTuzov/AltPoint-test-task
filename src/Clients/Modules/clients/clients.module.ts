@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ClientsService } from './clients.service';
 import { SequelizeModule } from '@nestjs/sequelize';
 import { ClientsController } from './clients.controller';
 import Child from '../../Models/Child/Child.model';
@@ -17,9 +16,20 @@ import LivingAddress from '../../Models/Address/Living-Address.model';
 import RegAddress from '../../Models/Address/Reg-Address.model';
 import FactAddress from '../../Models/Address/Fact-Address.model';
 import JurAddress from '../../Models/Address/Jur-Address.model';
+import { SoftDeleteClientService } from './Services/SoftDeleteClient.service';
+import { CreateClientService } from './Services/CreateClient.service';
+import { UpdateClientService } from './Services/UpdateClient.service';
+import { GetClientWithSpouseService } from './Services/GetClientWithSpouse.service';
+import { GetAllClientsService } from './Services/GetAllClients.service';
 
 @Module({
-    providers: [ClientsService],
+    providers: [
+        SoftDeleteClientService,
+        CreateClientService,
+        UpdateClientService,
+        GetClientWithSpouseService,
+        GetAllClientsService
+    ],
     controllers: [ClientsController],
     imports: [
         SequelizeModule.forFeature([
@@ -41,7 +51,11 @@ import JurAddress from '../../Models/Address/Jur-Address.model';
         CommunicationModule
     ],
     exports: [
-        ClientsService
+        SoftDeleteClientService,
+        CreateClientService,
+        UpdateClientService,
+        GetClientWithSpouseService,
+        GetAllClientsService
     ]
 })
 export class ClientsModule {
